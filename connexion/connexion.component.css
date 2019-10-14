@@ -1,0 +1,33 @@
+html {
+  font-family: FuturaPT-Medium;
+}
+textarea:focus, input:focus{
+  outline: none;
+}
+.content_body{width: 800px;height: 800px ;position: absolute;margin-left: 25%;border: 1px solid #888888;margin-top: 50px;}
+.logo_app{width: 300px;height: 50px;background-color: #252525;position: absolute;margin-left: 37%;background: url(../../assets/images/logo.jpg)no-repeat;margin-top: 100px}
+.content_connexion{width: 50%;height: 400px;position: absolute;margin-left: 25%;margin-top: 25%}
+.form_con{width: 300px;background-color: transparent;border:none!important;border-bottom: 1px solid #888888!important;margin-top: 50px;margin-left: 15%;height: 40px }
+#check_form{margin-left: 15%;margin-top: 25px}
+.btn_connexion{width: 300px;height: 50px;background-color: #4ab3cc;border:none;;color: #fff;margin-left: 15%;margin-top: 30px;border-radius: 5px;font-size: 25px;}
+#left_03{margin-left: 50%;color: #00b4cf;margin-top: 0px!important;}
+#lb_check{color: rgb(102, 102, 102);}
+#icon_login{background-image: url('../../assets/images/login.jpg');background-repeat: no-repeat;background-position: right;}
+#icon_password{background-image: url('../../assets/images/password.jpg');background-repeat: no-repeat;background-position: right;}
+
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+  background-color: transparent !important;}
+/*************************************************************/
+
+
+/*************************************************************/
+@media screen and (max-width: 600px) {
+  .content_body{width: 400px;margin-left: 10%;}
+  .content_connexion{width: 50%;margin-left: 5%;}
+  .logo_app{width: 300px;height: 50px;margin-left: 25%;}
+  #left_03{margin-left: 25%;}
+
+
+}
+
+

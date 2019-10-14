@@ -1,0 +1,200 @@
+<div class="col-md-12 content_liste top_10">
+  <div class="row top_row"  *ngFor=" let matiere of matieres | async | matieres:term ">
+    <div class="col-md-1">
+      <div *ngIf="estNonVidee(matiere.icone); then thenBlock else elseBlock"></div>
+      <ng-template #thenBlock>
+      <div >
+      <img class="img_liste" src="../../../assets//uploads/{{matiere.icone}}" >
+      </div>
+      </ng-template>
+      <ng-template #elseBlock>
+        <div >
+          <img class="img_liste" src="../../../assets/images/iconeGroupe.png" >
+        </div>
+      </ng-template>
+    </div>
+    <div class="col-md-2"><label style="margin-top: 10px" class="text_label"> {{ matiere.nomMatiere}}  </label>
+    </div>
+    <div class="col-md-2">
+      <label style="margin-left: 50px;margin-top: 10px" class="text_label">{{matiere.abrege }}
+      </label>
+    </div>
+
+    <div class="col-md-3" style="text-align: center;" *ngIf="matiere.estOptionnelle == isValid  ; else elseBlockOpt"><label style="margin-top: 10px" class="text_label">Optionnelle</label></div>
+      <ng-template #elseBlockOpt>
+     <div class="col-md-3" style="text-align: center;"><label style="margin-top: 10px" class="text_label">Obligatoire</label></div>
+      </ng-template>
+
+    <div class="col-md-3"  style="text-align: center;"><label style="margin-left: 50px ;margin-top: 10px"> </label></div>
+
+    <div class="col-md-1">
+      <div class="icon_L_ajouter">
+      <input type="submit" value="" class="btn_up" data-toggle="modal"   data-target="#ModalModif" (click)="ModalAfficheMatiere(matiere.id,matiere.idE,matiere.nomMatiere,matiere.abrege,matiere.estOptionnelle,matiere.icone)">
+      <input  class="btn_sup" value=""  data-dismiss="modal" (click)="modalSupp(matiere)" data-toggle="modal" data-target="#ModalSupp" type="submit">
+    </div>
+    </div>
+
+  </div>
+
+  </div>
+
+<div class="row" style="margin-top: 50px">
+  <div class="col-xs-6 col-md-2"></div>
+  <div class="col-xs-6 col-md-4"><input type="submit" style="margin-left: 60px" name="" class="btn_bas" value="Imprimer la liste (PDF)" (click)="generationPDF()"></div>
+  <div class="col-xs-6 col-md-4"><input type="submit" style="width: 50%" name="" class="btn_bas" value="Exporter EXCEL" (click)="exportationExcel()"></div>
+  <div class="col-xs-6 col-md-2" ></div>
+</div>
+
+
+<div class="modal fade" id="ModalModif" role="dialog">
+  <div class="modal-dialog modal_T" >
+
+    <!-- Modal content-->
+    <div class="modal-content" style="">
+      <div class="modal-header" style=" border-bottom: 1px solid #4ab3cc !important ">
+        <button type="button" class="close" data-dismiss="modal">
+          <img src="../../../assets/images/ferme.png"></button>
+        <h4 class="modal-title titre_ajouter"> Modifier une matière</h4>
+      </div>
+
+      <br> <br>
+      <div class="modal-body">
+        <form class="form-horizontal" role="form"   #g="ngForm"   method="post" class="A_form" >
+          <fieldset>
+            <input type="text" hidden   class="control-label label-text input-model"  name="id" ngModel [(ngModel)]="id">
+             <input type="text"  type="hidden" class="control-label label-text input-model"  name="idE" ngModel [(ngModel)]="idE">
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form">Nom de la matière *</label> </div>
+              <div class="col-xs-6 col-sm-4 "><input type="text"  class="input_01"   name="nomMatiere" ngModel [(ngModel)]="nomMatiere" ></div>
+
+              </div>
+
+            <br>
+            <!--  -->
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form">Abrégè * </label> </div>
+              <div class="col-xs-6 col-sm-4 "><input type="text" name="" class="input_01" name="abrege" ngModel [(ngModel)]="abrege"></div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form">Optionelle </label> </div>
+              <div class="ol-xs-6 col-sm-4" style="padding-left:37px!important">
+                <label class="check_01"><input type="checkbox" name="estOptionnelle" ngModel [(ngModel)]="estOptionnelle"><span class="checkmark"></span></label>
+                <label class="text_form" style="margin-left: 15px">  Oui </label>
+
+                <label class="check_01"><input type="checkbox" name="estOptionnelle" ngModel [(ngModel)]="estOptionnelle"><span class="checkmark"></span></label>
+                <label class="text_form" style="margin-left: 15px">  Non </label>
+              </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+<!--
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form" >Icone  </label> </div>
+              <div class="col-xs-6 col-sm-4 "> <div  class="input_file" data-toggle="tooltip" data-placement="right" title="<img src='../../../assets/uploads/{{pathIcone}}' width='200px'  />" data-original-title="111111111111111111111111111111!">
+
+                <input type="file" id="BSbtndanger"   tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" (change)="onIconeSelected($event)">
+                <div class="bootstrap-filestyle input-group" style="display:none">
+                  <input type="text" class="form-control" placeholder="" disabled="disabled" name="iconee" [(ngModel)]="pathIcone">
+                  <span class="group-span-filestyle input-group-btn" tabindex="0">
+                      <label for="BSbtndanger" class="btn btn-danger " >
+                        <span class="icon-span-filestyle glyphicon glyphicon-folder-open"></span>
+                        <span class="buttonText">
+                          <img src="../../../assets/images/picto_modifier.png" class="file_image">
+                          <img src="../../../assets/images/vignette.png" class="file_image">
+                        </span>
+                      </label>
+                    </span>
+                </div>
+                <input hidden name="icone" [(ngModel)]="pathIcone"  ngModel/>
+
+              </div></div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>-->
+
+            <div class="row " >
+              <div class="col-xs-6 col-sm-4"><label class="text_form"  >Icone </label> </div>
+              <div  class="col-xs-6 col-sm-4">
+                <div class="input-group image-preview" style="margin-top: 0px !important;padding-bottom: 0px!important;padding-top: 0px !important;">
+                  <input type="text"   name="iconne" [(ngModel)]="pathIcone"  class="input_01 image-preview-filename inputImg" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
+                  <span class="input-group-btn spanUpImg">
+                          <div class="btnUploadImg btn-default image-preview-input" >
+                            <img src="../../../assets/images/picto_modifier.png" class="file_image"/>
+                              <span class="image-preview-input-title"></span>
+
+                              <div *ngIf="estNonVidee(pathIcone); then firstB else secondB"></div>
+                              <ng-template #firstB><img src="../../../assets/uploads/{{pathIcone}}" name="imgSign" [(ngModel)]="pathIcone"  class="file_imgBleu" ></ng-template>
+                              <ng-template #secondB><img src="../../../assets/images/imgBlanc.png" name="imgSigniat" class="file_imgBleu" disabled="file_imgBleu"></ng-template>
+
+                              <input  style=" position: absolute!important;bottom: 15px!important;width: 73%!important;opacity: 0!important;" type="file"  name="input-file-preview"  (change)="onIconeSelected($event)"/> <!-- rename it -->
+                          </div>
+                     </span>
+                </div>
+                <input type="hidden" name="icone" [(ngModel)]="pathIcone"  ngModel/>
+              </div>
+            </div>
+            <br>
+
+
+            <br>
+            <br>
+
+            <div class="row">
+              <div class="col-xs-6 col-sm-4 "><label><input type="submit" name=""   data-dismiss="modal" value="Annuler" class="btn_annuler"></label> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+              <div class="col-xs-6 col-sm-4 ">
+                <label><button type="submit" value="Enregistrer la matière" class="btn_en_fiche"  (click)="updateMatiere(g.value)"  data-dismiss="modal" >
+                  Enregister la matière
+                </button></label>
+              </div>
+            </div>
+            <br>
+
+          </fieldset>
+        </form>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div id="ModalSupp" class="modal fade ModalNotif" role="dialog">
+  <div class="modal-dialog modal_Notif">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+
+
+      </div>
+      <div class="modal-body">
+        <label class="notif_01">Etes vous sur(e) de supprimer matiére  « {{tmpmatiere.nomMatiere}} » ? </label>
+        <label class="groupeNotif_btn">
+          <input type="submit" name="" class="btn_N_01" data-dismiss="modal"   value="NON">
+
+          <input type="submit" name="" class="btn_N_02"  data-dismiss="modal"  (click)="deleteMatiere(tmpmatiere.id)" value="OUI">
+        </label>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+

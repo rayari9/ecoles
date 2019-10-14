@@ -1,0 +1,60 @@
+<div class="col-md-12 content_liste top_10">
+  <div class="row top_row"  *ngFor=" let directeur of listDirecteurs | async">
+    <div class="col-md-1">
+      <div *ngIf="estNonVidee(directeur.avatar ); then thenBlock else elseBlock"></div>
+      <ng-template #thenBlock>
+        <div >
+          <img class="img_liste" src="../../../assets/images/{{directeur.avatar}}" >
+        </div>
+      </ng-template>
+      <ng-template #elseBlock>
+        <div >
+          <img class="img_liste" src="../../../assets/images/iconeGroupe.png" >
+        </div>
+      </ng-template>
+    </div>
+    <div class="col-md-2"><label class="text_form" style="margin-top: 10px"> {{ directeur.nom}} {{ directeur.prenom}} </label>
+    </div>
+    <div class="col-md-2"><label class="text_form" style="margin-top: 10px"> {{ directeur.nomE}} </label>
+    </div>
+    <div class="col-md-2"><label class="text_form" style="margin-top: 10px"> {{ directeur.email}} </label>
+    </div>
+    <div class="col-md-2"><label class="text_form" style="margin-top: 10px"> {{ directeur.tel1}} </label>
+    </div>
+
+    <div class="col-md-2"  style="text-align: center;"><label style="margin-left: 50px ;margin-top: 10px"> </label></div>
+
+    <div class="col-md-1">
+      <div class="icon_L_ajouter">
+        <input type="submit" value="" class="btn_up" data-toggle="modal" data-target="#modifierEcole"  (click)="modifier(directeur.nom,directeur.prenom)" >
+        <input type="submit" value="" class="btn_sup" data-toggle="modal" data-target="#SupDirecteur" (click)="modalSupp(directeur)"></div>
+    </div>
+
+  </div>
+</div>
+<div class="row" style="margin-top: 50px">
+  <div class="col-xs-6 col-md-2"></div>
+  <div class="col-xs-6 col-md-4"><input type="submit" style="margin-left: 60px" name="" class="btn_bas" value="Imprimer la liste (PDF)" (click)="generationPDF()"></div>
+  <div class="col-xs-6 col-md-4"><input type="submit" style="width: 50%" name="" class="btn_bas" value="Exporter EXCEL" ></div>
+  <div class="col-xs-6 col-md-2" ></div>
+</div>
+
+<div id="SupDirecteur" class="modal fade" role="dialog">
+  <div class="modal-dialog modal_Notif">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body">
+        <label class="notif_01"> êtes-vous sûr(e) de vouloir supprimer   «{{tmpdirecteur.nom}}»  ? </label>
+        <label class="groupeNotif_btn">
+          <input type="submit"  class="btn_N_01" value="Oui" (click)="DeleteDirecteur(tmpdirecteur.id)" data-dismiss="modal">
+          <input type="submit"  class="btn_N_02" value="Non" data-dismiss="modal">
+        </label>
+      </div>
+
+    </div>
+
+  </div>
+</div>

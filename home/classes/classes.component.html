@@ -1,0 +1,249 @@
+<div class="col-md-9 top_list" >
+    <br>
+
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-6" style="float: right;"><p class="Dconnexion"> Derniére Connexion  : {{dateDeconx}} </p></div>
+      </div>
+
+      <!-- ***** -->
+      <div class="row ">
+          <div class="col-md-4"><label class="plus">+</label><input type="submit" name="" value="Ajouter une école" class="btnAdd01" data-toggle="modal" data-target="#modalAdd"></div>
+          <div class="col-md-6">
+          <div class="R_01">
+          <select class="select-ecole"  [(ngModel)]="selectModel"  (change)="viewListCours(selectModel)"  >
+            <option [value]="null"> Sélectionner une école</option>
+            <option *ngFor=" let ecole of ecoles"   [value]="ecole.id" > {{ecole.nomE}}</option>
+          </select>
+        </div>
+        </div>
+        <div class="col-md-2">
+          <input type="text" name="" class="form-control" style="float:right;height: 38px;width: 250px;border: 1px solid #ccc!important;margin-top: 22px " [(ngModel)]="term">
+          <img src="../../../assets/images/fermer.png" alt="" class="img_fermer" (click)="Effacer_Recherche()">
+          <img src="../../../assets/images/picto_recherche.png" alt="" class="img_recherche">
+        </div>
+      </div>
+
+
+    <br>
+
+
+
+    <div class="row" >
+      <div class="col-md-12"><label  class="alert_V">Nouvelle école enregistré</label></div>
+
+    </div>
+
+
+    <table class="table   " [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="5">
+        <tbody class="top_10">
+            <tr *ngFor="let class of mf.data">
+                <td >
+                   <img  *ngIf="class.icone == ''" class="img_liste" src="../../../assets//uploads/{{class.icone}}" >
+                   <img *ngIf="class.icone != ''" class="img_liste" src="../../../assets/images/iconeGroupe.png" >
+                </td>
+                <td class="col-md-2">
+                    <label style="margin-top: 10px" class="text_label  text-center">
+                      {{class.nomC}}
+                    </label>
+                </td>
+                <td  class="col-md-2">
+                    <label style="margin-top: 10px" class="text_label  text-center">0
+                      {{class.abrege}}
+                    </label>
+                </td>
+                <td class="col-md-2">
+
+                     <label style="margin-top: 10px" class="text_label  text-center"> {{class.Niveaux?.libelleN}}</label>
+
+                </td>
+                <td class="col-md-2" >
+                    <label style="margin-top: 10px" class="text_label  text-center">{{class.Decoupage?.libelleD}}</label>
+                </td>
+                <td class="col-md-2">
+                  <label style="margin-left: 50px ;margin-top: 10px"> </label>
+                </td>
+                <td>
+                    <div class="icon_L_ajouter">
+                        <input type="submit" value="" class="btn_up " data-toggle="modal"   data-target="#updateMatiere" (click)="ModalAfficheMatiere(matiere.id,matiere.idE,matiere.nomMatiere,matiere.abrege,matiere.estOptionnelle,matiere.icone)">
+                        <input  class="btn_sup " value=""  data-dismiss="modal" (click)="modalSupp(matiere)" data-toggle="modal" data-target="#ModalSupp" type="submit">
+                      </div>
+                </td>
+            </tr>
+            <tr *ngIf="data.length==0">
+             <td colspan="6" class="text-center">
+                Aucune résultat à afficher
+             </td>
+            </tr>
+            </tbody>
+            <tfoot *ngIf="data.length!=0">
+            <tr>
+                <td colspan="6">
+                    <mfBootstrapPaginator></mfBootstrapPaginator>
+                </td>
+            </tr>
+            </tfoot>
+    </table>
+
+    <div class="row" style="margin-top: 50px" *ngIf="data.length!=0">
+      <div class=" col-md-2"></div>
+      <div class=" col-md-4"><input type="submit" style="margin-left: 60px" name="" class="btn_bas" value="Imprimer la liste (PDF)" ></div>
+      <div class=" col-md-4"><input type="submit" style="width: 50%" name="" class="btn_bas" value="Exporter EXCEL" ></div>
+      <div class=" col-md-2" ></div>
+    </div>
+
+  </div>
+
+
+  <!-- -------------------------------------------------------------------------------------------  -->
+
+  <div class="modal fade" id="modalAdd" role="dialog">
+
+    <div class="modal-dialog  modal_T R_modal-dialog"  >
+
+      <div class="modal-content R_tab-content">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><img src="../../../assets/images/ferme.png"></button>
+          <h4 class="modal-title titre_ajouter">Ajouter une classe</h4>
+        </div>
+
+        <div class="modal-body">
+          <div class="panel-body">
+
+            <div class="tab-content ">
+
+              <form accept-charset="UTF-8"  #g="ngForm"  name="form" id="formAdd" class="form-horizontal A_form" role="form"  method="post">
+                <fieldset>
+
+                  <div class="row">
+                    <br><br>
+
+                    <div class=" col-md-4"><label class="text_form">Nom de la classe *:  </label> </div>
+                    <div class=" col-md-4"><input type="text" name="nomG" class="input_01" placeholder="Nom de la classe" ></div>
+                    <div class="col-md-4"></div>
+
+                  </div>
+
+                  <br>
+
+
+                  <div class="row">
+
+
+                    <div class="col-md-4"><label class="text_form">Abrégé *:  </label> </div>
+                    <div class="col-md-4"><input type="text" name="nomG" class="input_01" placeholder="Abrégé" ></div>
+                    <div class="col-md-4"></div>
+
+                  </div>
+                  <br>
+
+
+                  <div class="row">
+
+
+                    <div class="col-md-4"><label class="text_form">Insérer une icône :  </label> </div>
+                    <div class="col-md-4"><input type="text" name="nomG" class="input_01" placeholder="" ></div>
+                    <div class="col-md-4"></div>
+
+                  </div>
+                  <br>
+
+
+                  <div class="row">
+
+
+                    <div class="col-md-4"><label class="text_form">Niveau d’apprentissage*:  </label> </div>
+                    <div class="col-md-4"> <select id="Select1" class="input_01  style_select" name="libelleD"  #decoup  >
+                      <option  value="0" >Selectionner </option>
+                      <option value="">1111</option>
+                      <option value="">2222</option>
+                      <option value="">3333</option>
+                      <option value="">4444</option>
+                    </select></div>
+                    <div class="col-md-4"></div>
+
+                  </div>
+                  <br>
+
+
+                  <div class="row">
+
+
+                    <div class="col-md-4"><label class="text_form">Découpage*:  </label> </div>
+                    <div class="col-md-4"> <select id="Select2" class="input_01  style_select" name="libelleD"  #decoup  >
+                      <option  value="0" >Selectionner </option>
+                      <option value="">1111</option>
+                      <option value="">2222</option>
+                      <option value="">3333</option>
+                      <option value="">4444</option>
+                    </select></div>
+                    <div class="col-md-4"></div>
+
+                  </div>
+                  <br>
+
+
+                  <div class="row">
+
+
+                    <div class="col-md-4"><label class="text_form">Format de notation*:  </label> </div>
+                    <div class="col-md-4"> <select id="Select3" class="input_01  style_select" name="libelleD"  #decoup  >
+                      <option  value="0" >Selectionner </option>
+                      <option value="">1111</option>
+                      <option value="">2222</option>
+                      <option value="">3333</option>
+                      <option value="">4444</option>
+                    </select></div>
+                    <div class="col-md-4"></div>
+
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="col-md-4"><label class="tab_ajouter" >Personnalisation externe </label> </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+
+                    <div class="col-md-4"><input type="text" class="input_01 M_01" placeholder="Anglais" ></div>
+                    <div class="col-md-4"><input type="text" class="C_01"><input type="text" class="C_01 E_01"></div>
+                    <div class="col-md-4"><input type="text" class="C_01 E_01 L_02 W_01"><input class="btn_supp btn_01" name="" type="submit" value=""></div>
+
+                  </div>
+                  <br>
+                  <div class="row">
+
+                    <div class="col-md-4"><input type="text" class="input_01 M_01" placeholder="Anglais" ></div>
+                    <div class="col-md-4"><input type="text" class="C_01"><input type="text" class="C_01 E_01"></div>
+                    <div class="col-md-4"><input type="text" class="C_01 E_01 L_02 W_01"><input _ngcontent-c5="" class="btn_ok btn_02" name="" type="submit" value="OK"></div>
+
+                  </div>
+                  <br>
+
+                  <div class="row ">
+
+                    <div class="col-md-4">
+                      <label><input type="submit" name="" value="Annuler" class="btn_annuler R_btn_annuler" data-dismiss="modal" ></label>
+                    </div>
+                    <div class=" col-md-4"></div>
+                    <div class="col-md-4">
+                      <label><input type="submit"  #buttonAdd  value="Enregistrer la classe" class="btn_en_fiche" data-dismiss="modal"></label>
+                    </div>
+                  </div>
+
+
+
+
+                </fieldset>
+              </form>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>

@@ -1,0 +1,67 @@
+<div class="col-md-12 content_liste top_10">
+  <div class="row top_row"  *ngFor=" let personnel of listPersonnels | async">
+    <div class="col-md-1">
+   <div *ngIf="estNonVidee(personnel.avatar ); then thenBlock else elseBlock"></div>
+    <ng-template #thenBlock>
+      <div >
+        <img class="logo" style="width: 50px!important;height: 50px!important;margin-left: 20px;"  src="../../../assets/images/{{personnel.avatar}}" >
+      </div>
+    </ng-template>
+    <ng-template #elseBlock>
+      <div >
+        <img class="logo" style="width: 50px!important;height: 50px!important;margin-left: 20px;"  src="../../../assets/images/iconeGroupe.png" >
+     </div>
+    </ng-template>
+  </div>
+    <div class="col-md-2">
+      <label style="margin-top: 10px" class="text_form" style="margin-top: 10px"> {{ personnel.nom}} {{ personnel.prenom}} </label>
+    </div>
+    <div class="col-md-2">
+      <label style="margin-top: 10px" class="text_form" style="margin-top: 10px"> {{ personnel.nomE}} </label>
+    </div>
+    <div class="col-md-2">
+      <label style="margin-top: 10px" class="text_form" style="margin-top: 10px"> {{ personnel.email}} </label>
+    </div>
+    <div class="col-md-2">
+      <label style="margin-top: 10px" class="text_form" style="margin-top: 10px"> {{ personnel.tel1}} </label>
+    </div>
+    <div >
+      <div class="col-md-2" style="text-align: center;"></div>
+    </div>
+
+
+    <div class="col-md-1">
+      <div class="icon_L_ajouter">
+        <input type="submit" value="" class="btn_up"     data-toggle="modal"   data-target="#ModalModif"  (click)="modifierPersonnel(personnel.nom,personnel.prenom)" >
+        <input type="submit" value=""  class="btn_sup"   (click)="modalSupp(personnel)"  data-toggle="modal" data-target="#SupPersonnel" >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="margin-top: 50px">
+  <div class="col-xs-6 col-md-2"></div>
+  <div class="col-xs-6 col-md-4"><input type="submit" style="margin-left: 60px" name="" class="btn_bas" value="Imprimer la liste (PDF)" (click)="generationPDF()"></div>
+  <div class="col-xs-6 col-md-4"><input type="submit" style="width: 50%" name="" class="btn_bas" value="Exporter EXCEL" ></div>
+  <div class="col-xs-6 col-md-2" ></div>
+</div>
+
+<div id="SupPersonnel" class="modal fade" role="dialog">
+  <div class="modal-dialog modal_Notif">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body">
+        <label class="notif_01"> êtes-vous sûr(e) de vouloir supprimer   «{{tmppersonel.nom}}»  ? </label>
+        <label class="groupeNotif_btn">
+          <input type="submit"  class="btn_N_01" value="Oui" (click)="DeletePersonnel(tmppersonel.id)" data-dismiss="modal">
+          <input type="submit"  class="btn_N_02" value="Non" data-dismiss="modal">
+        </label>
+      </div>
+
+    </div>
+
+  </div>
+</div>

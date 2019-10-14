@@ -1,0 +1,561 @@
+<div class="col-sm-9 top_list" >
+  <br>
+  <div class="row">
+
+    <div class="col-md-6"></div>
+    <div class="col-md-6" style="float: right;"><p class="Dconnexion"> Derniére Connexion  : {{dateDeconx}} </p></div>
+  </div>
+
+  <div class="row ">
+    <div class="col-xs-6 col-md-4"><input type="submit" name="" value=" +  Ajouter un directeur " class="btnAdd01"  data-toggle="modal" data-target="#ModalAdd" (click)="viderDirecteur()" ></div>
+
+    <div class="col-md-6">
+      <div class="R_01">
+        <select class="select-ecole"  [(ngModel)]="selectModel"  (change)="viewListDirecteurs($event)"  >
+          <option >Sélectionner une école</option>
+          <option *ngFor=" let ecole of ecoles |async"   [value]="ecole.id" > {{ecole.nomE}}</option>
+        </select>
+      </div>
+
+    </div>
+    <div class="col-md-2">
+      <input type="text" name="" class="form-control" style="float:right;height: 38px;width: 250px;border: 1px solid #ccc!important;margin-top: 22px " [(ngModel)]="term">
+      <img src="../../../assets/images/fermer.png" alt="" class="img_fermer" (click)="Effacer_Recherche()">
+      <img src="../../../assets/images/picto_recherche.png" alt="" class="img_recherche">
+    </div>
+  </div>
+  <div class="row" >
+    <div class="col-md-12"><label style="color: #28c691"> {{successAdd}} </label></div>
+
+  </div>
+  <table class="table content_liste top_10" [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="5"  >
+    <tbody>
+    <tr *ngFor=" let directeur of mf.data ">
+      <td>
+        <div class="col-md-1">
+          <div *ngIf="estNonVidee(directeur.avatar ); then thenBlock else elseBlock"></div>
+          <ng-template #thenBlock>
+            <div >
+              <img class="img_liste" src="../../../assets/uploads/{{directeur.avatar}}" >
+            </div>
+          </ng-template>
+          <ng-template #elseBlock>
+            <div >
+              <img class="img_liste" src="../../../assets/images/iconeGroupe.png" >
+            </div>
+          </ng-template>
+        </div>
+      </td>
+      <td class="col-md-3">
+      <label class="text_label text-center" style="margin-top: 10px"> {{ directeur.nom}} {{ directeur.prenom}} </label>
+
+      </td>
+      <td class="col-md-3">
+       <label class="text_label text-center" style="margin-top: 10px"> {{ directeur.nomE}} </label>
+
+      </td>
+      <td class="col-md-3">
+       <label class="text_label text-center" style="margin-top: 10px"> {{ directeur.email}} </label>
+
+      </td>
+      <td class="col-md-3">
+  <label class="text_label text-center" style="margin-top: 10px"> {{ directeur.tel1}} </label>
+
+
+      </td>
+      <td class="col-md-1">
+
+          <div class="icon_L_ajouter">
+            <input type="submit" value="" class="btn_up" data-toggle="modal" data-target="#modifierDirecteur"  (click)="getDirecteur(directeur.id,directeur.avatar,directeur.civilite,directeur.nom,directeur.prenom,directeur.nomE
+
+          ,directeur.fonction,directeur.estAdmin,directeur.tel1,directeur.tel2,directeur.adressePostale,directeur.complement_adresse,directeur.ville,directeur.code_postal,directeur.email,directeur.password)" >
+            <input type="submit" value="" class="btn_sup" data-toggle="modal" data-target="#SupDirecteur" (click)="modalSupp(directeur)"></div>
+
+      </td>
+    </tr>
+    <tr *ngIf="data.length==0">
+      <td colspan="6" class="text-center">
+        Aucune résultat à afficher
+      </td>
+    </tr>
+    </tbody>
+    <tfoot class="footer-table">
+    <tr *ngIf="data.length>5">
+      <td colspan="6">
+        <mfBootstrapPaginator></mfBootstrapPaginator>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+
+  <div class="row" style="margin-top: 50px">
+    <div class="col-xs-6 col-md-2"></div>
+    <div class="col-xs-6 col-md-4"><input type="submit" style="margin-left: 60px" name="" class="btn_bas" value="Imprimer la liste (PDF)" (click)="generationPDF()"></div>
+    <div class="col-xs-6 col-md-4"><input type="submit" style="width: 50%" name="" class="btn_bas" value="Exporter EXCEL" (click)="exportationDirecteurExcel()" ></div>
+    <div class="col-xs-6 col-md-2" ></div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="ModalAdd" role="dialog">
+  <div class="modal-dialog modal_T" >
+
+    <!-- Modal content-->
+    <div class="modal-content" style="">
+      <div class="modal-header" style=" border-bottom: 1px solid #4ab3cc !important; ">
+        <button type="button" class="close" data-dismiss="modal">
+          <img src="../../../assets/images/ferme.png"></button>
+        <h4 class="modal-title titre_ajouter">Ajouter une fiche directeur </h4>
+      </div>
+
+
+
+      <form  accept-charset="UTF-8" #monForm="ngForm"  name="form"   class="form-horizontal  A_form" role="form"  method="post">
+
+        <fieldset>
+          <div class="modal-body">
+
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+
+
+              <div class="col-xs-6 col-sm-4"><label class="text_form"  >Avatar</label> </div>
+
+              <div class="col-xs-6 col-sm-4" >
+                <div class="input_file" data-toggle="tooltip" data-placement="right" title="<img src='../../../assets/uploads/{{pathavatar}}' width='200px'  />" data-original-title="" [ngClass]="disabledbutton">
+
+
+
+                  <input type="file" id="BSbtndanger"   tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" (change)="onupPhotoEtablissementSelected($event)">
+
+                  <span class="group-span-filestyle input-group-btn" tabindex="0">
+                      <label for="BSbtndanger" class="btn btn-danger ">
+                        <span class="icon-span-filestyle glyphicon glyphicon-folder-open"></span>
+                        <span class="buttonText" hidden>
+                          <img src="../../../assets/images/picto_modifier.png" class="file_image">
+                          <img src="../../../assets/images/vignette.png" class="file_image">
+                        </span>
+                      </label>
+                    </span>
+                </div>
+
+              </div>
+
+              <input type="hidden"  name="avatar" [(ngModel)]="pathavatar"  ngModel/>
+            </div>
+
+
+
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Civilité*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="civilite"    ngModel  required  #civ="ngModel" >
+              </div>
+              <show-errors [control]="civ"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Nom*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="nom"    ngModel required #nomm="ngModel" >
+              </div>
+              <show-errors [control]="nomm"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <!--       <input type="hidden" class="input_01"      [(ngModel)]="idEcole" ngModel  >-->
+
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Prénom*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="prenom"  ngModel required #prenomm="ngModel" required >
+              </div>
+              <show-errors [control]="prenomm"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Ecole ratachée*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <select class="input_01"     name="idEcole"  required ngModel  #ecole="ngModel">
+
+                  <option *ngFor=" let ecole of ecoles |async"   [value]="ecole.id" > {{ecole.id}} {{ecole.nomE}}</option>
+                </select>
+              </div>
+              <show-errors [control]="ecole"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Fonction*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="fonction" #name="ngModel"  ngModel required  #fn="ngModel"  >
+              </div>
+              <show-errors [control]="fn"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Administrateur</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="checkbox"  name="estAdmin"  ngModel  value="1"  >
+              </div>
+
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="col-xs-6 col-sm-4"><label class="tab_ajouter" style="margin-top: 10px;margin-left: 70px;">Coordonnées </label> </div>
+              </div>
+            </div>
+
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Tel 1</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="number" class="input_01"  name="tel1" #name="ngModel"  ngModel  >
+              </div>
+              <show-errors [control]=""></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Tel 2</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="number" class="input_01"  name="tel2" #name="ngModel"  ngModel  >
+              </div>
+              <show-errors [control]=""></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Adresse postale</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="adressePostale"  ngModel   >
+              </div>
+
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Complément d'adresse</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="complement_d_adresse" #name="ngModel"  ngModel  >
+              </div>
+              <show-errors [control]=""></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Ville</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="ville"   ngModel  >
+              </div>
+              <show-errors [control]=""></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Code postale</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="number" class="input_01"  name="code_postale" #name="ngModel"  ngModel  >
+              </div>
+              <show-errors [control]=""></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Email*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="email" class="input_01"  name="email"   ngModel required  #mail="ngModel"       >
+
+              </div>
+              <show-errors [control]="mail"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Mot de passe</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="password" class="input_01"    name="password" [(ngModel)]="password"   ngModel  >
+              </div>
+
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Confirmation mot de passe</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="password" class="input_01"    name="password2" [(ngModel)]="password2"   ngModel   >
+              </div>
+
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+
+            <div *ngIf="password.toString()!=password2.toString() ">
+              <div class="row " style="margin-left: 20px;margin-top: 20px">
+                <div class="col-xs-6 col-sm-4"></div>
+                <div class="col-xs-6 col-sm-4">
+                  <span class="alert alert-danger" >Confirmation mot de passe incorrect</span>
+                </div>
+
+                <div class="col-xs-6 col-sm-4"></div>
+              </div>
+            </div>
+
+
+
+
+
+
+
+          </div>
+          <div class="row " style="margin-left: 20px;margin-top: 20px">
+
+            <div class="col-xs-6 col-sm-4">
+              <label class="text_form"><input type="submit"  value="Annuler" class="btn_en_fiche" style="width: 200px"></label>
+            </div>
+            <div class="col-xs-6 col-sm-3"></div>
+            <div class="col-xs-6 col-sm-4">
+              <label class="text_form"><input type="submit" data-dismiss="modal"   value="Enregistrer la fiche" (click)="ajouterDirecteur(monForm.value)"   style="width: 300px" class="btn_en_fiche" [disabled]="!monForm.valid || password.toString()!=password2.toString() "></label>
+            </div>
+          </div>
+
+        </fieldset>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="SupDirecteur" class="modal fade" role="dialog">
+  <div class="modal-dialog modal_Notif">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body">
+        <label class="notif_01"> êtes-vous sûr(e) de vouloir supprimer   «{{tmpdirecteur.nom}}»  ? </label>
+        <label class="groupeNotif_btn">
+          <input type="submit"  class="btn_N_01" value="Oui" (click)="DeleteDirecteur(tmpdirecteur.id)" data-dismiss="modal">
+          <input type="submit"  class="btn_N_02" value="Non" data-dismiss="modal">
+        </label>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="modifierDirecteur" role="dialog">
+  <div class="modal-dialog modal_T" >
+
+    <!-- Modal content-->
+    <div class="modal-content" style="">
+      <div class="modal-header" style=" border-bottom: 1px solid #4ab3cc !important; ">
+        <button type="button" class="close" data-dismiss="modal">
+          <img src="../../../assets/images/ferme.png"></button>
+        <h4 class="modal-title titre_ajouter"> Modifier la fiche directeur </h4>
+      </div>
+
+
+
+      <form  accept-charset="UTF-8" #monForm2="ngForm"  name="form"   class="form-horizontal  A_form" role="form"  method="post">
+
+        <fieldset>
+          <div class="modal-body">
+
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+
+
+              <div class="col-xs-6 col-sm-4"><label class="text_form"  >Avatar</label> </div>
+
+              <div class="col-xs-6 col-sm-4" >
+                <div class="input_file" data-toggle="tooltip" data-placement="right" title="<img src='../../../assets/uploads/{{pathavatar}}' width='200px'  />" data-original-title="" [ngClass]="disabledbutton">
+
+
+
+                  <input type="file" id="BSbtndanger2"   tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);" (change)="onupPhotoEtablissementSelected($event)">
+
+                  <span class="group-span-filestyle input-group-btn" tabindex="0">
+                      <label for="BSbtndanger" class="btn btn-danger ">
+                        <span class="icon-span-filestyle glyphicon glyphicon-folder-open"></span>
+                        <span class="buttonText" hidden>
+                          <img src="../../../assets/images/picto_modifier.png" class="file_image">
+                          <img src="../../../assets/images/vignette.png" class="file_image">
+                        </span>
+                      </label>
+                    </span>
+                </div>
+
+              </div>
+
+              <input type="hidden"  name="avatar" [(ngModel)]="pathavatar"  ngModel/>
+            </div>
+
+
+
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Civilité*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="civilite" [(ngModel)]="civilite"    ngModel  required  #civv="ngModel" >
+                <input type="hidden" class="input_01"  name="id" [(ngModel)]="id"    ngModel   >
+              </div>
+              <show-errors [control]="civv"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Nom*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="nom" [(ngModel)]="nom"    ngModel required #nommm="ngModel" >
+              </div>
+              <show-errors [control]="nommm"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+
+
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Prénom*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="prenom" ngModel [(ngModel)]="prenom"   required #prenommm="ngModel" required >
+              </div>
+              <show-errors [control]="prenommm"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Ecole ratachée*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <select class="input_01"     name="nomE" [(ngModel)]="nomE"  required ngModel  #ecolee="ngModel">
+                  <option > {{nomE}} </option>
+                  <option *ngFor=" let ecole of ecoles |async"    [value]="ecole.id"  class="control-label label-text input-model" > {{ecole.nomE}}</option>
+                </select>
+              </div>
+              <show-errors [control]="ecolee"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Fonction*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="fonction" [(ngModel)]="fonction"  ngModel required  #fnn="ngModel"  >
+              </div>
+              <show-errors [control]="fnn"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Administrateur</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="radio"  name="estAdmin"  [(ngModel)]="estAdmin"  ngModel  value="1" >
+              </div>
+
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="col-xs-6 col-sm-4"><label class="tab_ajouter" style="margin-top: 10px;margin-left: 70px;">Coordonnées </label> </div>
+              </div>
+            </div>
+
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Tel 1</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="number" class="input_01"  name="tel1" [(ngModel)]="tel1"  ngModel  >
+              </div>
+              <show-errors [control]=""></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Tel 2</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="number" class="input_01"  name="tel2"   ngModel [(ngModel)]="tel2"  >
+              </div>
+              <show-errors [control]=""></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Adresse postale</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="adressePostale"  ngModel  [(ngModel)]="adressePostale"  >
+              </div>
+
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Complément d'adresse</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="complement_adresse"   ngModel [(ngModel)]="complement_adresse" >
+              </div>
+              <show-errors [control]=""></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Ville</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="text" class="input_01"  name="ville"   ngModel  [(ngModel)]="ville"  >
+              </div>
+
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Code postale</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="number" class="input_01"  name="code_postal" [(ngModel)]="code_postal"  ngModel  >
+              </div>
+
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Email*</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="email" class="input_01"  name="email"   ngModel required  #maill="ngModel"    [(ngModel)]="email"    >
+
+              </div>
+              <show-errors [control]="maill"></show-errors>
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Mot de passe</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="password" class="input_01"    name="password" [(ngModel)]="password"   ngModel  >
+              </div>
+
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+            <div class="row " style="margin-left: 20px;margin-top: 20px">
+              <div class="col-xs-6 col-sm-4"><label class="text_form">Confirmation mot de passe</label></div>
+              <div class="col-xs-6 col-sm-4">
+                <input type="password" class="input_01"    name="password2" [(ngModel)]="password2"   ngModel   >
+              </div>
+
+              <div class="col-xs-6 col-sm-4"></div>
+            </div>
+
+            <div *ngIf="password.toString()!=password2.toString() ">
+              <div class="row " style="margin-left: 20px;margin-top: 20px">
+                <div class="col-xs-6 col-sm-4"></div>
+                <div class="col-xs-6 col-sm-4">
+                  <span class="alert alert-danger" >Confirmation mot de passe incorrect</span>
+                </div>
+
+                <div class="col-xs-6 col-sm-4"></div>
+              </div>
+            </div>
+
+
+
+
+
+
+
+          </div>
+          <div class="row " style="margin-left: 20px;margin-top: 20px">
+
+            <div class="col-xs-6 col-sm-4">
+              <label class="text_form"><input type="submit"  value="Annuler" class="btn_en_fiche" style="width: 200px"></label>
+            </div>
+            <div class="col-xs-6 col-sm-3"></div>
+            <div class="col-xs-6 col-sm-4">
+              <label class="text_form"><input type="submit" data-dismiss="modal"   value="Enregistrer la fiche" (click)="modifierDirecteur(monForm2.value)"   style="width: 300px" class="btn_en_fiche" [disabled]="!monForm2.valid || password.toString()!=password2.toString()"></label>
+            </div>
+          </div>
+
+        </fieldset>
+
+      </form>
+    </div>
+  </div>
+</div>

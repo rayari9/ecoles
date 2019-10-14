@@ -1,0 +1,572 @@
+
+<!-- *********************************************************************************************************************************************************************************************** -->
+<div class="col-md-9 top_list" style="">
+  <br>
+  <div class="row">
+
+    <div class="col-md-6"></div>
+    <div class="col-md-6" style="float: right;"><p class="Dconnexion"> Derniére Connexion  : {{dateDeconx}} </p></div>
+  </div>
+
+
+ <div class="row ">
+    <div class="col-md-4"><label class="plus">+</label><input type="submit" name="" value="Ajouter un élève " class="btnAdd01"  data-toggle="modal" data-target="#ModalAdd"></div>
+    <div class="col-md-6">
+      <div class="R_01">
+        <select class="select-ecole"  [(ngModel)]="selectModel"  (change)="viewListEleves($event)" >
+          <option [value]="null">Sélectionner une école</option>
+          <option *ngFor=" let ecole of ecoles |async"   [value]="ecole.id"  [selected]="isSelected(ecole.id)"  > {{ecole.nomE}}</option>
+        </select>
+      </div>
+
+    </div>
+    <div class=" col-md-2">
+      <input type="text" name="" class="form-control" placeholder="" style="float:right;height: 38px;width: 250px;border: 1px solid #ccc!important;margin-top: 22px "  [(ngModel)]="term">
+      <img src="../../../assets/images/fermer.png" alt="" class="img_fermer" (click)="Effacer_Recherche()">
+      <img src="../../../assets/images/picto_recherche.png" alt="" class="img_recherche">
+    </div>
+  </div>
+
+
+  <br>
+
+  <!-- ********* -->
+
+  <div class="row" >
+    <div class="col-md-12"><label style="color: #28c691"> {{successAdd}} </label></div>
+
+  </div>
+
+
+  <div class="col-md-12 content_liste top_10">
+    <div class="row  top_row"  *ngFor="let eleve of listEleve | async | eleves:term ">
+      <div class="col-md-1">
+        <div *ngIf="estNonVidee(eleve.avatar); then thenBlock else elseBlock"></div>
+        <ng-template #thenBlock>
+          <div >
+            <img class="img_liste" src="../../../assets/uploads/{{eleve.avatar}}" >
+          </div>
+        </ng-template>
+        <ng-template #elseBlock>
+          <div >
+            <img class="img_liste" src="../../../assets/images/iconeGroupe.png" >
+          </div>
+        </ng-template>
+      </div>
+      <div class="col-md-2"><label style="margin-top: 10px" class="text_label">{{ eleve.nom}} {{ eleve.prenom}}   </label>
+      </div>
+      <div class="col-md-2">
+        <label style="margin-left: 50px;margin-top: 10px" class="text_label">{{ eleve.nomE}}
+        </label>
+      </div>
+
+      <div class="col-md-3" style="text-align: center;" ><label style="margin-top: 10px" class="text_label"> {{ eleve.nomC}}</label></div>
+
+
+      <div class="col-md-3"  style="text-align: center;"><label style="margin-left: 50px ;margin-top: 10px" class="text_label"> </label></div>
+      <div class="col-md-1">
+        <div class="icon_L_ajouter">
+          <input type="submit"  value="" class="btn_up" data-toggle="modal"   data-toggle="modal" data-target="#ModalModif "
+                 (click)="ModalAfficheEleve(eleve.id,eleve.nom,eleve.prenom,eleve.adressePostale,eleve.INE,eleve.dateN,eleve.nomE,eleve.abrege,eleve.redoublant,eleve.provenance,eleve.dateEntree,eleve.dateSortie,eleve.motifSortie,
+   eleve.login,eleve.password)">
+          <input type="submit" value="" class="btn_sup"  data-dismiss="modal" (click)="modalSupp(eleve)" data-toggle="modal" data-target="#ModalSupp">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row" style="margin-top: 50px">
+    <div class="col-xs-6 col-md-2"></div>
+    <div class="col-xs-6 col-md-4"><input type="submit" style="margin-left: 60px" name="" class="btn_bas" value="Imprimer la liste (PDF)" (click)="generationPDF()"></div>
+    <div class="col-xs-6 col-md-4"><input type="submit" style="width: 50%" name="" class="btn_bas" value="Exporter EXCEL" (click)="exportationExcel()"></div>
+    <div class="col-xs-6 col-md-2" ></div>
+  </div>
+
+
+</div>
+
+<div class="modal fade" id="ModalAdd" role="dialog">
+  <div class="modal-dialog modal_T" >
+
+    <!-- Modal content-->
+    <div class="modal-content" style="">
+      <div class="modal-header" style=" border-bottom: 1px solid #4ab3cc !important; ">
+        <button type="button" class="close" data-dismiss="modal">
+          <img src="../../../assets/images/ferme.png"></button>
+        <h4 class="modal-title titre_ajouter"> Ajouter une fiche élève </h4>
+      </div>
+
+      <br> <br>
+      <div class="modal-body">
+        <form class="form-horizontal" role="form"   #f="ngForm"   method="post" class="A_form"  countryCity telephoneNumbers  novalidate name="formaAddEleve"  id="formaAddEleve">
+          <fieldset>
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Nom  * </label> </div>
+              <div class="col-xs-6 col-sm-4 "><input type="text"  class="input_01"   name="nom" ngModel  (change)="selectNom($event)" #nomm="ngModel"  ngModel required uniqueName></div>
+              <show-errors [control]="nomm"></show-errors>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+
+
+            <br>
+            <!--  -->
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Prenom * </label> </div>
+              <div class="col-xs-6 col-sm-4 "><input type="text"  class="input_01" name="prenom" #prenomm="ngModel"  ngModel required ></div>
+              <show-errors [control]="prenomm"></show-errors>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Date de naissance  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="date" class="input_01 style_select" name="dateN" ngModel > </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+
+            </div>
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> INE  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="text"  class="input_01" name="INE" ngModel> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+
+
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Ecole *  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><select class="input_01 style_select" name="nomE"  (change)="selectEcole($event)"  ngModel required>
+                <option>  </option>
+                <option *ngFor=" let ecole of ecoles |async"  [ngValue]="ecole.id" class="control-label label-text input-model"  [selected]="isSelected(ecole.id)" > {{ecole.nomE}}</option>
+              </select> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+
+            </div>
+
+
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Classe *   </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><select class="input_01 style_select" name="abrege"  ngModel required >
+                <option>  </option>
+                <option *ngFor=" let classe of listClasses |async"  [ngValue]="classe.id" class="label_model"> {{classe.abrege}}</option>
+              </select> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Redoublant  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="text"  class="input_01" name="redoublant" ngModel> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Provenance  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="text"  class="input_01" name="provenance" ngModel> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+
+            <br>
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Date d'entrée  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="date"  class="input_01 style_select" name="dateEntree" ngModel> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+
+            <br>
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Date de sortie  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="date"  class="input_01 style_select" name="dateSortie" ngModel> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+
+            <br>
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Motif </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="text"  class="input_01" name="motifSortie" ngModel> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+
+            <br>
+            <br>
+            <div class="row">
+              <div class="col-xs-6 col-sm-4"><label class="tab_ajouter titre_interne"  >  Matières optionnelles </label> </div>
+            </div>
+            <br>
+
+            <input  class="input_01" name="nomMatiere"  ngModel value="{{selectedMatiere}}" type="hidden"  >
+
+            <div #add_matiere_optionnelle></div>
+
+            <div class="row">
+              <div class="col-xs-6 col-sm-4 "></div>
+              <div class="ol-xs-6 col-sm-4" ><select class="input_01 style_select" (change)="selectMatiere($event)">
+                <option disabled>  Ajouter une matière  </option>
+                <option *ngFor=" let matiere of matieres |async"  [ngValue]="matiere.id" class="label_model"> {{matiere.nomMatiere}}</option>
+              </select> </div>
+              <div class="col-xs-6 col-sm-4 "><input type="submit" name="" value="OK" class="btn_ok"  (click)="addMatiereOptionnelle()"></div>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+              <div class="col-xs-6 col-sm-4"><label class="tab_ajouter titre_interne"  >  Compte parents </label> </div>
+            </div>
+            <!------------ Liste des enfants ------------->
+            <div class="row">
+              <div class="col-md-9 content_liste top_10" style="margin-left: 4%; border: 1px solid #666666;width: 80%!important;box-shadow :none!important">
+                <div class="row top_row" >
+                  <div class="col-md-1">
+
+                        <img class="img_liste" src="../../../assets/images/iconeGroupe.png" >
+                      </div>
+
+                  <div class="col-md-2"><label style="margin-top: 10px" class="text_label"> {{selectedNom}}  </label>
+                  </div>
+                  <div class="col-md-3">
+                    <label style="margin-left: 50px;margin-top: 10px" >
+                    </label>
+                  </div>
+                  <div class="col-md-3" style="text-align: center;" ><label style="margin-top: 10px" class="text_label">{{selectedEmail}}</label></div>
+
+                  <div class="col-md-1"  style="text-align: center;"><label style="margin-left: 50px ;margin-top: 10px"> </label></div>
+                 <div class="col-md-1">
+                    <input class="btn_sup" type="sumbit"    data-toggle="modal" data-target=""> </div>
+
+                </div>
+
+              </div>
+            </div>
+            <br>
+
+            <br>
+            <div class="row">
+              <div class="col-xs-6 col-sm-4 "><label class="text_form">  Saisir son adresse mail ou téléphone * </label> </div>
+              <div class="col-xs-6 col-sm-4 "><input  class="input_01"  name="infoParents" ngModel (change)="selectEmail($event)"  #infoParentss="ngModel" email ngModel ></div>
+              <show-errors [control]="infoParentss"></show-errors>
+              <div class="col-xs-6 col-sm-4 "><label><input type="submit" name="" value="Envoyer les identifiants"  style="width: 242px !important" class="btn_annuler "></label> </div>
+            </div>
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form">  Identifiants de connexion *  </label> </div>
+              <div class="col-xs-6 col-sm-4 "><input  class="input_01" name="login" ngModel  type="email"  #emaill="ngModel" email ngModel></div>
+              <show-errors [control]="emaill"></show-errors>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form">  Mot de passe  </label> </div>
+              <div class="col-xs-6 col-sm-4 "><input type="text"  [type]="hide ? 'password' : 'text'" class="input_01" name="password" ngModel [(ngModel)]="password"></div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-xs-6 col-sm-4 "><label><input   data-dismiss="modal" type="submit"  value="Annuler" class="btn_annuler R_btn_annuler"></label> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+              <div class="col-xs-6 col-sm-4 ">
+                <label><button type="submit" value="Enregistrer la fiche élève" class="btn_en_fiche"  (click)="AddEleve(f.value)"  data-dismiss="modal"  id="buttonAdd">
+                  Enregister la fiche élève
+                </button></label>
+              </div>
+            </div>
+            <br>
+
+          </fieldset>
+        </form>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+<div id="ModalSupp" class="modal fade ModalNotif" role="dialog">
+  <div class="modal-dialog modal_Notif">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+
+
+      </div>
+      <div class="modal-body">
+        <label class="notif_01">Etes vous sur(e) de supprimer matiére  « {{tmpeleve.nom}} » ?  </label>
+        <label class="groupeNotif_btn">
+          <input type="submit" name="" class="btn_N_01" data-dismiss="modal"   value="NON">
+
+          <input type="submit" name="" class="btn_N_02"  data-dismiss="modal"  (click)="deleteEleve(tmpeleve.id)" value="OUI">
+        </label>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="ModalModif" role="dialog">
+  <div class="modal-dialog modal_T" >
+
+    <div class="modal-content" style="">
+      <div class="modal-header" style=" border-bottom: 1px solid #4ab3cc !important; ">
+        <button type="button" class="close" data-dismiss="modal">
+          <img src="../../../assets/images/ferme.png"></button>
+        <h4 class="modal-title titre_ajouter"> Modifier une fiche élève </h4>
+      </div>
+
+      <br> <br>
+      <div class="modal-body">
+        <form class="form-horizontal" role="form"   #g="ngForm"   method="post" class="A_form" >
+          <fieldset>
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Nom  * </label> </div>
+              <div class="col-xs-6 col-sm-4 "><input type="text"  class="input_01"   name="nom" ngModel    [(ngModel)]="nom" ngModel></div>
+              <div class="col-xs-6 col-sm-4 ">
+                <input type="text"    class="control-label label-text input-model"  name="id" ngModel [(ngModel)]="id" hidden>
+
+              </div>
+            </div>
+
+
+            <br>
+
+            <div class="row">
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Prenom * </label> </div>
+              <div class="col-xs-6 col-sm-4 "><input type="text"  class="input_01" name="prenom"   [(ngModel)]="prenom" ngModel ></div>
+
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Date de naissance  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="date" class="input_01" name="dateN" ngModel  [(ngModel)]="dateN"> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+
+            </div>
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> INE  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="text"  class="input_01" name="INE" ngModel  [(ngModel)]="INE"> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Ecole *  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><select class="input_01" name="nomE"   ngModel  [(ngModel)]="nomE" >
+                <option > {{nomE}} </option>
+                <option *ngFor=" let ecole of ecoles |async"  [ngValue]="ecole.id" class="control-label label-text input-model"  > {{ecole.nomE}}</option>
+              </select> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+
+            </div>
+
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Classe *   </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><select class="input_01" name="abrege"  ngModel   [(ngModel)]="abrege" >
+                <option > {{abrege}}  </option>
+                <option *ngFor=" let classe of listClasses |async"  [ngValue]="classe.id" class="label_model"> {{classe.abrege}}</option>
+              </select> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Redoublant  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="text"  class="input_01" name="redoublant" ngModel [(ngModel)]="redoublant"> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Provenance  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="text"  class="input_01" name="provenance" ngModel [(ngModel)]="provenance"> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+
+            <br>
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Date d'entrée  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="date"  class="input_01" name="dateEntree" ngModel [(ngModel)]="dateEntree"> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+
+            <br>
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Date de sortie  </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="date"  class="input_01" name="dateSortie" ngModel [(ngModel)]="dateSortie"> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+
+            <br>
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form"> Motif </label> </div>
+              <div class="ol-xs-6 col-sm-4" ><input type="text"  class="input_01" name="motifSortie" ngModel [(ngModel)]="motifSortie"> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+
+            <br>
+            <br>
+            <div class="row">
+              <div class="col-xs-6 col-sm-4"><label class="tab_ajouter titre_interne">  Matières optionnelles </label> </div>
+            </div>
+            <br>
+
+            <input  class="input_01" name="nomMatiere"  ngModel  type=""  hidden>
+
+            <div class="row" *ngFor="let matiereEleve of listMatiereEleve | async">
+              <div class="col-xs-6 col-sm-4 "></div>
+              <div class="col-xs-6 col-sm-4 "><input type="text" name="" class="input_01" placeholder="{{matiereEleve.nomMatiere}}" readonly ></div>
+              <div class="col-xs-6 col-sm-4 "><input type="submit" name="" value="" class="btn_supp" (click)="remove()"></div>
+            </div>
+            <br>
+
+            <div #add_matiere_optionnelle></div>
+
+            <div class="row">
+              <div class="col-xs-6 col-sm-4 "></div>
+              <div class="ol-xs-6 col-sm-4" ><select class="input_01" (change)="selectMatiere($event)">
+                <option disabled>  Ajouter une matière  </option>
+                <option *ngFor=" let matiere of matieres |async"  [ngValue]="matiere.id" class="label_model"> {{matiere.nomMatiere}}</option>
+              </select> </div>
+              <div class="col-xs-6 col-sm-4 "><input type="submit" name="" value="OK" class="btn_ok"  (click)="addMatiereOptionnelle()"></div>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+              <div class="col-xs-6 col-sm-4"><label class="tab_ajouter titre_interne"  >  Compte parents </label> </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-9 content_liste top_10" style="margin-left: 4%; border: 1px solid #666666;width: 80%!important;box-shadow:none!important">
+                <div class="row top_row"  *ngFor=" let parentEleve of listParentEleve | async">
+                  <div class="col-md-1">
+
+                    <img class="img_liste" src="../../../assets/images/iconeGroupe.png" >
+
+                  </div>
+                  <div class="col-md-2"><label style="margin-top: 10px" class="text_label"> {{ parentEleve.nomP}} {{ parentEleve.prenomP}}  </label>
+                  </div>
+                  <div class="col-md-3">
+                    <label style="margin-left: 50px;margin-top: 10px">{{parentEleve.nomE }}
+                    </label>
+                  </div>
+
+                  <div class="col-md-2" style="text-align: center;" ><label style="margin-top: 10px" class="text_label">{{parentEleve.tel1}}</label></div>
+
+                  <div class="col-md-1"  style="text-align: center;"><label style="margin-left: 50px ;margin-top: 10px" class="text_label">  {{parentEleve.emailP}}</label></div>
+                  <div class="col-md-1" >
+                    <div class="btn_sup" style=" margin-left: 218px; !important" (click)="modalSupprimeParent(parentEleve)" data-toggle="modal" data-target="#ModalSupprimeEleve">
+                    </div></div>
+
+                </div>
+
+              </div>
+            </div>
+            <br>
+
+            <br>
+            <!--            <div class="row">
+                          <div class="col-xs-6 col-sm-4 "><label class="text_form">  Saisir son adresse mail ou téléphone * </label> </div>
+                          <div class="col-xs-6 col-sm-4 "><input  class="input_01"  name="infoParents" ngModel   ></div>
+
+                          <div class="col-xs-6 col-sm-4 "><label><input type="submit" name="" value="Envoyer les identifiants"  style="width: 242px !important" class="btn_annuler"></label> </div>
+                        </div>
+                        <br>-->
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form">  Identifiants de connexion *  </label> </div>
+              <div class="col-xs-6 col-sm-4 "><input  class="input_01" name="login" ngModel  type="email"   [(ngModel)]="login"></div>
+
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+
+            <div class="row">
+
+              <div class="col-xs-6 col-sm-4 "><label class="text_form">  Mot de passe  </label> </div>
+              <div class="col-xs-6 col-sm-4 "><input type="text"  [type]="hide ? 'password' : 'text'" class="input_01" name="password" ngModel  [(ngModel)]="password"></div>
+              <div class="col-xs-6 col-sm-4 "></div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-xs-6 col-sm-4 "><label><input  data-dismiss="modal" type="submit" name="" value="Annuler" class="btn_annuler R_btn_annuler"></label> </div>
+              <div class="col-xs-6 col-sm-4 "></div>
+              <div class="col-xs-6 col-sm-4 ">
+                <label><button type="submit" value="Enregistrer la fiche élève" class="btn_en_fiche"  (click)="updateEleve(g.value)"   data-dismiss="modal" >
+                  Enregister la fiche élève
+                </button></label>
+              </div>
+            </div>
+            <br>
+
+          </fieldset>
+        </form>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<div id="ModalSupprimeEleve" class="modal fade ModalNotif" role="dialog">
+  <div class="modal-dialog modal_Notif">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+
+
+      </div>
+      <div class="modal-body">
+        <label class="notif_01">Etes vous sur(e) de supprimer le parent  « {{tmpParent.nomP}} » ? </label>
+        <label class="groupeNotif_btn">
+          <input type="submit" name="" class="btn_N_01" data-dismiss="modal"   value="NON">
+
+          <input type="submit" name="" class="btn_N_02"  data-dismiss="modal" (click)="deleteParent(tmpParent.id)"  value="OUI">
+        </label>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+

@@ -1,0 +1,109 @@
+<div class="col-md-9 top_list" style="">
+  <br>
+
+  <div class="row">
+    <div class="col-md-6"></div>
+    <div class="col-md-6" style="float: right;"><p  class="Dconnexion">Derniére Connexion  : {{dateDeconx}} </p></div>
+  </div>
+
+  <br>
+
+  <div class="row" >
+    <div class=" col-md-12"><label class="text_form tab_ajouter" >Etape 1: </label></div>
+  </div>
+
+  <div class="row" >
+    <div class=" col-md-12"><label class="  text_form" >Selectionner un Groupe Scolaire  </label></div>
+
+
+    </div>
+
+    <div class="row">
+      <div class=" col-md-12"> <label class="text_form tab_ajouter" >Etape 2: </label></div>
+    </div>
+
+    <div class="row">
+      <div class=" col-md-12"><label class="text_form" >Sélectionner une école   </label></div>
+    </div>
+
+      <div class="row">
+        <div class=" col-md-12"><label class="text_form tab_ajouter" >Etape 3: </label></div>
+      </div>
+  <div class="row">
+    <div class=" col-md-12"><label class="text_form" >Importer un fichier    </label></div>
+  </div>
+  <br>
+  <form  >
+
+  <div class="row " >
+    <div class=" col-md-4"><label class="text_form" >Choisir un groupe</label></div>
+    <div class=" col-md-4">
+<select  class="input_01 style_select" [(ngModel)]="nameGroupe" name="nameGroupe" (change)="fnct($event)">
+        <option >Nom groupe</option>
+        <option  *ngFor="let g of groupeScolaires | async"  [value]="g.nomBase" > {{g.nomG}}  </option>
+      </select>
+    </div>
+    <div class=" col-md-4"></div>
+  </div>
+    <br>
+    <div class="row " >
+      <div class=" col-md-4"><label class="text_form" >Choisir une école</label></div>
+      <div class=" col-md-4">
+        <select name="NameEcole"  class="input_01 style_select">
+            <option >Nom école</option>
+            <option *ngFor=" let ecole of ecoles |async"   [value]="ecole.id" >  {{ecole.nomE}}</option>
+        </select>
+      </div>
+      <div class=" col-md-4"></div>
+    </div>
+    <br>
+
+    <div class="row " >
+      <div class=" col-md-4"><label class="text_form" >Choisir un fichier</label></div>
+      <div class=" col-md-6">
+        <img src="../../../assets/images/importation.png"  class="img_02"  >
+        <input type="text" class="input_01 image-preview-filename Importfile" disabled="disabled">
+         <span class="fiche_01 spanUpImg">
+                          <div class="btnUploadImg btn-default image-preview-input"  >
+                              <span class="image-preview-input-title"></span>
+                             <img src="../../../assets/images/trombone.png"  class="img_01 file_imgImp" disabled="file_imgBleu">
+                              <input  class="file_04" type="file"  name="input-file-preview"  /> <!-- rename it -->
+                          </div>
+                     </span>
+
+      </div>
+
+    </div>
+    <br>
+
+
+
+
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+
+  </form>
+
+
+
+
+  <div class="col-md-12 content_liste top_10">
+    <div class="row top_row"  >
+      <div class="col-md-1">
+       <img class="img_liste"  style="width: 50px!important;height: 50px!important;margin-left: 20px;" src="../../../assets/images/school.png">
+      </div>
+      <div class="col-md-2"><label class="text_label" style="margin-top: 10px"> nom </label></div>
+      <div class="col-md-2"><label class="text_label" style="margin-left: 50px;margin-top: 10px">groupe</label></div>
+      <div class="col-md-3"><label style="margin-top: 10px" ></label></div>
+      <div class="col-md-3"><label style="margin-left: 50px ;margin-top: 10px" ></label></div>
+      <div class="col-md-1"><div class="icon_L_ajouter"> <input type="submit" value="" class="btn_up" data-toggle="modal" data-target="#"  >
+        <input type="submit" value="" class="btn_sup" data-toggle="modal" data-target="#" ></div></div>
+
+      <hr>
+    </div>
+  </div>
+</div>

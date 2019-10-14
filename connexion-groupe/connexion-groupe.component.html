@@ -1,0 +1,163 @@
+
+
+  <div class="container-fluid" style=" height: 100% !important;padding-left: 0px;padding-right: 0px">
+
+      <div style="padding-left: 0px!important;padding-right: 0px!important;height: 100%;" id="myCarousels" class="carousel slide col-md-8 col-sm-8 col-xs-8" data-ride="carousel" data-interval="false">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+          <li data-target="#myCarousels" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousels" data-slide-to="1"></li>
+        </ol>
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" style="height: 100%!important;">
+
+          <div class="item active" style="height: 100%!important;">
+            <img src="{{src}}"  alt="Second slide" style="height: 100%!important;">   <!--  [src]="src" -->
+          </div>
+
+          <div class="item" style="height: 100%!important;">
+            <img  #img2 src="{{src}}" alt="Second slide" style="height: 100%!important; opacity: 0.17;">  <!--src="../../../assets/images/connexion-groupe.jpg"-->
+            <!-- Static Header -->
+            <div class="header-text text-center hidden-xs">
+              <div class="main_title">
+                <div class="row"  style="margin-top: 5%;text-align: left">
+                  <div class="col-md-3" ><img *ngIf="isHidden == false" #img2 src="{{imageDirecteur}}"></div>
+                  <div class="col-md-9"  style="color: black;">{{motDirecteur}}
+                  </div>
+                </div>
+                <div *ngIf="isHidden == false" class="row" style="margin-top: 5%;text-align: left">
+                  <div class="col-md-6">
+                    <span class="glyphicon glyphicon-time" style="color: #72d4f1; margin-left: 25%;" ></span>
+                    <div style="color: black">
+                      1, place des écoles<br>
+                      89100 SENS <br>
+                      monecole@hotmail.com<br>
+                      01.12.34
+                      56.78<br>
+                      01.12.34.56.78<br>
+                      www.monecole.com
+                    </div>
+                  </div>
+                  <div class="col-md-6" >
+                    <span class="glyphicon glyphicon-map-marker" style="color: #72d4f1; margin-left: 25%;"></span>
+                    <div style="color: black">
+                      lundi    09.30-12.00  14.30-17.00<br>
+                      mardi    09.30-12.00  14.30-17.00<br>
+                      mercredi              14.30-17.00<br>
+                      jeudi    09.30-12.00  14.30-17.00<br>
+                      vendredi 09.30-12.00  14.30-17.00<br>
+                      samedi   09.30-12.00  14.30-17.00<br>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /header-text -->
+          </div>
+
+        </div>
+        <!-- Controls -->
+        <a class="left carousel-control" href="#myCarousels" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousels" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+      </div><!-- /carousel -->
+
+
+      <div class="col-md-4 col-sm-4 col-xs-4 login-sec">
+
+
+        <img style="text-align: center;" src="../../../assets/uploads/{{srcLogo}}"  name="image" style="display: block;margin-left: auto;margin-right: auto; width: 30%;margin-left: 30%;">
+
+        <!--<h2 class="text-center">Login Now</h2>  -->
+
+
+
+
+        <div>
+          <form class="login-form" name="formlogin"  #f="ngForm"  (ngSubmit)="loginUser(f.value)">
+
+
+<!--
+             <div>
+              <select class="selectpicker" data-live-search="true" #ecolee (click)="chargerEcole(ecolee.value)" >
+                <option data-tokens="ketchup mustard"  value="0"> Selectionner une ecole </option>
+                <option data-tokens="ketchup mustard"  *ngFor="let ecole of ecoles | async"  value="{{ecole.id}}"> {{ecole.nomE}}</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label  class="text-uppercase">Adress mail</label>
+              <input name="email" type="text" class="form-control" placeholder="" id="focusedInput" ngModel>
+              <span class="alert-danger"  color="red">{{emailMessageErreur}}</span>
+            </div>
+
+            <div class="form-group">
+              <label class="text-uppercase">Mot de pass</label>
+              <input type="password" class="form-control" placeholder="" name="password" ngModel>
+            </div>
+
+            <button type="submit" class="btn btn-info" >Submit</button>
+            <span class="alert-danger"  color="red">{{MessageErreur}}</span>
+-->
+            <div class="row">
+
+              <div style="text-align: center;">
+                <select class="selectpicker" data-live-search="true" #ecolee (click)="chargerEcole(ecolee.value)" >
+                  <option data-tokens="ketchup mustard"  value="0"> Selectionner une ecole </option>
+                  <option data-tokens="ketchup mustard"  *ngFor="let ecole of ecoles | async"  value="{{ecole.id}}"> {{ecole.nomE}}</option>
+                </select>
+              </div>
+
+              <div
+                style="text-align: center; margin-top: 14%;"
+                class="form-group col-md-offset-2 col-sm-offset-2 col-xs-offset-2 col-md-6 col-sm-6 col-xs-6">
+                <label *ngIf="isHidden == false" class="control-label">
+                  Adresse mail
+                </label>
+                <div *ngIf="isHidden == false" class="inner-addon right-addon">
+                  <i *ngIf="isHidden == false" class="glyphicon glyphicon-envelope"></i>
+
+
+                  <input  name="email" *ngIf="isHidden == false" type="text" class="form-control" placeholder="Adresse mail" ngModel style="border-radius: 8px 8px !important;" />
+
+
+                </div>
+              </div>
+
+              <div *ngIf="isHidden == false" style="text-align: center;" class="form-group col-md-offset-2 col-sm-offset-2 col-xs-offset-2 col-md-6 col-sm-6 col-xs-6">
+                <label *ngIf="isHidden == false" class="control-label">
+                  Mot de passe
+                </label>
+                <div *ngIf="isHidden == false" class="inner-addon right-addon">
+                  <i *ngIf="isHidden == false" class="glyphicon glyphicon-lock"></i>
+
+
+                  <input name="password" *ngIf="isHidden == false"  type="password" class="form-control" placeholder="Mot de passe" ngModel style="border-radius: 8px 8px !important;" />
+
+
+                </div>
+              </div>
+
+              <div>
+                <button *ngIf="isHidden == false" type="submit" class="btn btn-info" style="margin-left: 18%;border-color:transparent!important; padding: 3% 12.5%;border-color: transparent!important;">
+                  Se connecter</button>
+              </div>
+              <br>
+              <div>
+                <img style="text-align: center;" src="../../../assets/uploads/logo.jpg"  name="image" style="display: block;margin-left: auto;margin-right: auto; padding-top: 100%;">
+              </div>
+
+            </div>
+
+          </form>
+        </div>
+
+
+       <!-- <div class="copy-text">Created with <i class="fa fa-heart"></i> by <a href="http://grafreez.com">Grafreez.com</a></div> -->
+
+      </div>
+
+  </div>
+

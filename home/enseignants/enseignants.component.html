@@ -1,0 +1,91 @@
+<div class="col-sm-9 top_list" >
+  <br>
+  <div class="row">
+
+    <div class="col-md-6"></div>
+    <div class="col-md-6" style="float: right;"><p class="Dconnexion"> Derniére Connexion  : {{dateDeconx}} </p></div>
+  </div>
+
+  <div class="row ">
+    <div class="col-md-4"><label class="plus">+</label><input type="submit" name="" value="Ajouter un enseignant " class="btnAdd01 btnSupAd"  data-toggle="modal" data-target="#ModalAdd" [disabled]="!selectModel"></div>
+
+    <div class="col-md-6">
+      <div class="R_01">
+        <select class="select-ecole"  [(ngModel)]="selectModel"  (change)="viewListEnseignants($event)"  >
+          <option >Sélectionner une école</option>
+          <option *ngFor=" let ecole of ecoles |async"   [value]="ecole.id" > {{ecole.nomE}}</option>
+        </select>
+      </div>
+
+    </div>
+    <div class="col-md-2">
+      <input type="text" name="" class="form-control" style="float:right;height: 38px;width: 250px;border: 1px solid #ccc!important;margin-top: 22px " [(ngModel)]="term">
+      <img src="../../../assets/images/fermer.png" alt="" class="img_fermer" (click)="Effacer_Recherche()">
+      <img src="../../../assets/images/picto_recherche.png" alt="" class="img_recherche">
+    </div>
+  </div>
+  <div class="row" >
+    <div class="col-md-12"><label style="color: #28c691"> {{successAdd}} </label></div>
+
+  </div>
+  <div class="col-md-12 content_liste top_10">
+    <div class="row top_row"  *ngFor=" let enseignant of listenseignants| async ">
+      <div class="col-md-1">
+        <div *ngIf="estNonVidee(enseignant.avatar ); then thenBlock else elseBlock"></div>
+        <ng-template #thenBlock>
+          <div >
+            <img class="img_liste" src="../../../assets/images/{{directeur.avatar}}" >
+          </div>
+        </ng-template>
+        <ng-template #elseBlock>
+          <div >
+            <img class="img_liste" src="../../../assets/images/iconeGroupe.png" >
+          </div>
+        </ng-template>
+      </div>
+      <div class="col-md-2"><label class="text_label" style="margin-top: 10px"> {{ enseignant.nom}} {{ enseignant.prenom}} </label>
+      </div>
+      <div class="col-md-2"><label class="text_label" style="margin-top: 10px"> {{ enseignant.nomE}} </label>
+      </div>
+      <div class="col-md-2"><label class="text_label" style="margin-top: 10px"> {{ enseignant.email}} </label>
+      </div>
+      <div class="col-md-2"><label class="text_label" style="margin-top: 10px"> {{ enseignant.tel1}} </label>
+      </div>
+
+      <div class="col-md-2"  style="text-align: center;"><label style="margin-left: 50px ;margin-top: 10px"> </label></div>
+
+      <div class="col-md-1">
+        <div class="icon_L_ajouter">
+          <input type="submit" value="" class="btn_up" data-toggle="modal" data-target="#modifierDirecteur"  (click)="modifier(enseignant.nom,enseignant.prenom)" >
+          <input type="submit" value="" class="btn_sup" data-toggle="modal" data-target="#Supenseignant" (click)="modalSupp(enseignant)"></div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row" style="margin-top: 50px">
+    <div class="col-xs-6 col-md-2"></div>
+    <div class="col-md-4"><input type="submit" style="margin-left: 60px" name="" class="btn_bas" value="Imprimer la liste (PDF)" (click)="generationPDF()"></div>
+    <div class="col-md-4"><input type="submit" style="width: 50%" name="" class="btn_bas" value="Exporter EXCEL" ></div>
+    <div class="col-xs-6 col-md-2" ></div>
+  </div>
+</div>
+
+<div id="Supenseignant" class="modal fade" role="dialog">
+  <div class="modal-dialog modal_Notif">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body">
+        <label class="notif_01"> êtes-vous sûr(e) de vouloir supprimer   «{{tmpdirecteur.nom}}»  ? </label>
+        <label class="groupeNotif_btn">
+          <input type="submit"  class="btn_N_01" value="Oui" (click)="DeleteDirecteur(tmpdirecteur.id)" data-dismiss="modal">
+          <input type="submit"  class="btn_N_02" value="Non" data-dismiss="modal">
+        </label>
+      </div>
+
+    </div>
+
+  </div>
+</div>

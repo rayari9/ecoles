@@ -1,0 +1,530 @@
+<div class="col-md-9 top_list" style="">
+  <br>
+
+  <div class="row">
+
+    <div class="col-md-6"></div>
+    <div class="col-md-6" style="float: right;"><p  class="Dconnexion">Derniére Connexion  : {{dateDeconx}} </p></div>
+  </div>
+
+  <div class="row ">
+    <div class="col-md-4"><label class="plus">+</label><input type="submit" name="" value="Ajouter un groupe" class="btnAdd01" data-toggle="modal" data-target="#modalAdd"></div>
+    <div class="col-md-6"></div>
+    <div class="col-md-2">
+      <input type="text" name="" class="form-control" placeholder="recherche par nom" style="float:right;height: 38px;width: 250px;border: 1px solid #ccc!important;margin-top: 22px " [(ngModel)]="term">
+      <img src="../../../assets/images/fermer.png" alt="" class="img_fermer" (click)="Effacer_Recherche()">
+      <img src="../../../assets/images/picto_recherche.png" alt="" class="img_recherche">
+    </div>
+  </div>
+
+  <br>
+
+
+  <div class="row" >
+    <div class="col-md-12"><label style="color: #28c691">{{successAdd}}</label></div>
+  </div>
+
+  <table *ngIf="!loader"  class="table  " [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="5">
+    <tbody class="top_10">
+    <tr *ngFor="let g of mf.data | filterGroupe:term">
+      <td>
+        <div *ngIf="estNonVide(g.logoPageConx); then thenBlock else elseBlock"></div>
+
+        <ng-template #thenBlock><div class="img_liste"><img src="../../../assets/uploads/{{g.logoPageConx}}" width="50px"></div></ng-template>
+        <ng-template #elseBlock><div class="img_liste"><img src="../../../assets/images/iconeGroupe.png"></div></ng-template>
+
+      </td>
+      <td class="col-md-2 " ><label style="margin-top: 10px" class="text_label text-center"> {{g.nomG}} </label></td>
+      <td class="col-md-2" ><label style="margin-top: 10px" class="text_label text-center"> {{g.domaine}}  </label></td>
+      <td class="col-md-2">
+        <div><label style="margin-top: 10px" class="text_label text-center"></label></div>
+
+      </td>
+      <td class="col-md-2" >
+        <div ><label style="margin-top: 10px" class="text_label  text-center"></label></div>
+      </td>
+      <td class="col-md-3">
+        <label style="margin-left: 50px ;margin-top: 10px"> </label>
+      </td>
+      <td>
+        <div class="icon_L_ajouter">
+          <input type="submit" value="" class="btn_up"  data-toggle="modal" data-target="#modalMod" (click)="modalEdit(g.id,g.nomBase,g.nomG,g.domaine,g.couleurBarreTache, g.logoBarreTache,g.couleurExterne,g.logoPageConx,g.imagePageConx,g.defaultPersonalisation)">
+          <input type="submit" value="" class="btn_sup" data-toggle="modal" data-target="#modalDel" (click)="modalSupp(g)">
+        </div>
+      </td>
+    </tr>
+    <tr *ngIf="data.length==0">
+      <td colspan="6" class="text-center">
+        Aucune résultat à afficher
+      </td>
+    </tr>
+    </tbody>
+    <tfoot class="footer-table">
+    <tr *ngIf="data.length>5">
+      <td colspan="6">
+        <mfBootstrapPaginator></mfBootstrapPaginator>
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+  <div *ngIf="data.length!=0" class="row" style="margin-top: 50px">
+    <div class="col-xs-6 col-md-2"></div>
+    <div class="col-xs-6 col-md-4"><input type="submit" style="margin-left: 60px" name="" class="btn_bas" value="Imprimer la liste (PDF)" (click)="generatePDF()()"></div>
+    <div class="col-xs-6 col-md-4"><input type="submit" style="width: 50%" name="" class="btn_bas" value="Exporter EXCEL" (click)="exportation()"></div>
+    <div class="col-xs-6 col-md-2" ></div>
+  </div>
+
+
+
+
+</div>
+
+
+<!-- ------------------------------------------------------------------------------------------- -->
+
+<div class="modal fade" id="modalAdd" role="dialog">
+
+  <div class="modal-dialog  modal_T R_modal-dialog"  >
+
+    <div class="modal-content R_tab-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><img src="../../../assets/images/ferme.png"></button>
+        <h4 class="modal-title titre_ajouter">Ajouter un groupe scolaire</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="panel-body">
+
+          <div class="tab-content ">
+
+            <form accept-charset="UTF-8"  #g="ngForm"  name="form" id="formAdd" class="form-horizontal A_form" role="form"  method="post">
+              <fieldset>
+
+                <div class="row">
+                  <br><br>
+
+                  <div class="col-xs-6 col-sm-4"><label class="text_form">Nom du groupe scolaire*:  </label> </div>
+                  <div class="col-xs-6 col-sm-4"><input type="text" name="nomG" class="input_01" placeholder="Nom du groupe" ngModel></div>
+                  <div class="col-xs-6 col-sm-4"></div>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                  <div class="col-xs-6 col-sm-4"><label class="text_form">Domaine*: </label> </div>
+                  <div class="col-xs-6 col-sm-4"><div class="form-group input-group form_02 R_domain" >
+                    <input type="text" class="form-control input_domain" placeholder="Subdomain" name="domaine" (keyup)="onKeyDomain($event)" ngModel>
+                    <span class="input-group-addon domain">.my-studeez.fr</span>
+                  </div></div>
+                  <div class="col-xs-6 col-sm-4"></div>
+
+                  <input type="hidden" class="form-control" name="nomBase" [(ngModel)]="base" ngModel>
+                  <span class="alert-danger"  color="red">{{erreurDomain}}</span>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                  <div class="col-lg-12">
+                    <div class="col-xs-6 col-sm-4"><label class="tab_ajouter" >Personnalisation du groupe </label> </div>
+
+
+                  </div>
+
+                </div>
+
+                <div class="row row_01">
+
+                  <div class="col-xs-6 col-sm-4"><label class="text_form" >Image page de connexion :  </label> </div>
+
+                  <div class="col-xs-6 col-sm-4">
+
+
+
+
+                    <div class="input_01"  data-toggle="tooltip" title="<img src='../../../assets/uploads/{{pathImagePageCx}}'width='200px' />"  attr.data-original-title="<img src='../../../assets/uploads/{{pathImagePageCx}}'width='200px' />"  [ngClass]="disabledbutton">
+                      <input type="text"   name="imagePageCnx"  [(ngModel)]="pathImagePageCx" style="margin-top: 0px!important;"  class=" image-preview-filename inputImg" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
+                      <span class=" spanUpImg">
+                          <div class="btnUploadImg btn-default image-preview-input"  >
+                            <img src="../../../assets/images/picto_modifier.png" class="file_image"/>
+                              <span class="image-preview-input-title" ></span>
+
+                              <div *ngIf="estNonVide(pathImagePageCx); then testImgCnx else NotestImgCnx"></div>
+                              <ng-template #testImgCnx><img src="../../../assets/uploads/{{pathImagePageCx}}" [(ngModel)]="pathImagePageCx"  class="file_imgBleu" ></ng-template>
+                              <ng-template #NotestImgCnx><img src="../../../assets/images/imgBlanc.png"  class="file_imgBleu" disabled="file_imgBleu"></ng-template>
+
+                              <input  style=" position: absolute!important;bottom: 15px!important;width: 73%!important;opacity: 0!important;" type="file"  name="input-file-preview"  (change)="onFileSelected($event)"/> <!-- rename it -->
+                          </div>
+                     </span>
+                    </div>
+
+
+
+
+                  </div>
+                  <div class="col-xs-6 col-sm-4"></div>
+                  <input type="hidden" name="imagePageConx" [(ngModel)]="pathImagePageCx"  ngModel />
+                </div>
+
+                <br>
+
+                <div class="row row_01">
+
+                  <div class="col-xs-6 col-sm-4"><label class="text_form" >Logo Page de connexion :   </label> </div>
+
+                  <div class="col-xs-6 col-sm-4">
+
+
+                    <div class="input_01"  data-toggle="tooltip" title="<img src='../../../assets/uploads/{{pathLogoCx}}'width='200px' />"  attr.data-original-title="<img src='../../../assets/uploads/{{pathLogoCx}}'width='200px' />"  [ngClass]="disabledbutton">
+                      <input type="text"   name="imageLogoCnx"  [(ngModel)]="pathLogoCx" style="margin-top: 0px!important;"  class=" image-preview-filename inputImg" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
+                      <span class=" spanUpImg">
+                          <div class="btnUploadImg btn-default image-preview-input"  >
+                            <img src="../../../assets/images/picto_modifier.png" class="file_image"/>
+                              <span class="image-preview-input-title" ></span>
+
+                              <div *ngIf="estNonVide(pathLogoCx); then testLogoCnx else NotestLogoCnx"></div>
+                              <ng-template #testLogoCnx><img src="../../../assets/uploads/{{pathLogoCx}}" [(ngModel)]="pathLogoCx"  class="file_imgBleu" ></ng-template>
+                              <ng-template #NotestLogoCnx><img src="../../../assets/images/imgBlanc.png"  class="file_imgBleu" disabled="file_imgBleu"></ng-template>
+
+                              <input  style=" position: absolute!important;bottom: 15px!important;width: 73%!important;opacity: 0!important;" type="file"  name="input-file-preview"  (change)="onLogoPageConxSelected($event)"/> <!-- rename it -->
+                          </div>
+                     </span>
+                    </div>
+
+
+                  </div>
+                  <div class="col-xs-6 col-sm-4"></div>
+                  <input type="hidden" name="logoPageConx" [(ngModel)]="pathLogoCx"  ngModel/>
+                </div>
+
+
+
+                <br>
+                <div class="row row_01">
+                  <div class="col-xs-6 col-sm-4"><label class="text_form" >Couleur Externe:  </label> </div>
+                  <div class="col-sm-4">
+                    <div [colorPicker]="color" (colorPickerChange)="color=$event;onchangeColorExtern($event)"  [ngClass]="disabledbutton" class="input-group colorpicker-component colorpicker-element input_01 " style="margin-top: 0px!important;"  type="form-control" >
+                      <input  type="text" class="input-color-picker WBarreColor"  [value]="color" readonly />
+                      <span class="input-group-addon colorpicker-preview WinputC" ><i  [style.background]="color" class="color-picker WtailleColor"></i></span>
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" name="couleurExterne" [(ngModel)]="selectedcolorExtern"  ngModel/>
+                <br>
+
+
+
+                <div class="row row_01">
+
+                  <div class="col-xs-6 col-sm-4"><label class="text_form" >Logo barre de tache :   </label> </div>
+                  <div class="col-xs-6 col-sm-4">
+                    <div class="input_01"  data-toggle="tooltip" title="<img src='../../../assets/uploads/{{pathLogoBtache}}'width='200px' />"  attr.data-original-title="<img src='../../../assets/uploads/{{pathLogoBtache}}'width='200px' />"  [ngClass]="disabledbutton">
+                      <input type="text"   name="imgLogoBt"  [(ngModel)]="pathLogoBtache" style="margin-top: 0px!important;"  class=" image-preview-filename inputImg" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
+                      <span class=" spanUpImg">
+                          <div class="btnUploadImg btn-default image-preview-input"  >
+                            <img src="../../../assets/images/picto_modifier.png" class="file_image"/>
+                              <span class="image-preview-input-title" ></span>
+
+                              <div *ngIf="estNonVide(pathLogoBtache); then testImgBt else NotestImgBt"></div>
+                              <ng-template #testImgBt><img src="../../../assets/uploads/{{pathLogoBtache}}" [(ngModel)]="pathLogoBtache"  class="file_imgBleu" ></ng-template>
+                              <ng-template #NotestImgBt><img src="../../../assets/images/imgBlanc.png"  class="file_imgBleu" disabled="file_imgBleu"></ng-template>
+
+                              <input  style=" position: absolute!important;bottom: 15px!important;width: 73%!important;opacity: 0!important;" type="file"  name="input-file-preview"  (change)="onLogoBtacheSelected($event)"/> <!-- rename it -->
+                          </div>
+                     </span>
+                    </div>
+                  </div>
+                  <div class="col-xs-6 col-sm-4"></div>
+                  <input type="hidden" name="logoBarreTache" [(ngModel)]="pathLogoBtache"  ngModel/>
+                </div>
+
+                <br>
+                <div class="row row_01">
+                  <div class="col-xs-6 col-sm-4"><label class="text_form" >Couleur barre de tâche:  </label> </div>
+                  <div class="col-sm-4">
+                    <div [colorPicker]="selectedcolorBarretache" (colorPickerChange)="selectedcolorBarretache=$event;onchangeColorBarreTache($event)"  [ngClass]="disabledbutton" class="input-group colorpicker-component colorpicker-element input_01 " style="margin-top: 0px!important;"  type="form-control" >
+                      <input type="text" class="input-color-picker WBarreColor"  [value]="selectedcolorBarretache" readonly />
+                      <span class="input-group-addon colorpicker-preview WinputC" ><i  [style.background]="selectedcolorBarretache" class="color-picker WtailleColor"></i></span>
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" name="couleurBarreTache" [(ngModel)]="selectedcolorBarretache"  ngModel/>
+                <br><br>
+
+                <div class="row row_01">
+                  <div class="col-xs-6 col-sm-1"><label class="check_01" style="margin-left: 53px"><input type="checkbox" name="defaultPersonalisation"  (change)="UploadDisable()" [checked]="checkboxFlag" ngModel><span class="checkmark R_chekmark"></span></label></div>
+                  <div class="col-xs-6 col-sm-4"><label style="margin-top: 4.5px" class="R_label">Personnalisation par défaut de STUDEEZ</label></div>
+                </div>
+
+
+                <br><br>
+
+                <div class="row ">
+
+                  <div class="col-xs-6 col-sm-4">
+                    <label><input type="submit" name="" value="Annuler" class="btn_annuler R_btn_annuler" data-dismiss="modal" ></label>
+                  </div>
+                  <div class="col-xs-6 col-sm-4"></div>
+                  <div class="col-xs-6 col-sm-4">
+                    <label><input type="submit"  #buttonAdd [disabled]="!g.valid"  (click)="AddGroupe(g.value)" value="Enregistrer le groupe scolaire" class="btn_en_fiche" data-dismiss="modal"></label>
+                  </div>
+                </div>
+
+
+
+
+              </fieldset>
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<!---------------------------------------model ajout groupe scolaire---------------------------------------------------------------------->
+
+
+
+
+<!---------------------------------------model modif groupe scolaire--------------------------------------------------------------------->
+<div class="modal fade" id="modalMod" role="dialog">
+
+  <div class="modal-dialog modal_T R_modal-dialog"  >
+
+    <div class="modal-content R_tab-content" >
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><img src="../../../assets/images/ferme.png"></button>
+        <h4 class="modal-title titre_ajouter">Modifier un groupe scolaire</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="panel-body">
+
+          <div class="tab-content ">
+
+            <form accept-charset="UTF-8"  #f="ngForm"  name="form" id="formMod" class="form-horizontal A_form" role="form"  method="post">
+              <fieldset>
+
+                <div class="row">
+                  <br><br>
+
+                  <div class="col-xs-6 col-sm-4"><label class="text_form">Nom du groupe scolaire*:  </label> </div>
+                  <div class="col-xs-6 col-sm-4"><input type="text" name="nomG" class="input_01" placeholder="Nom du groupe" [(ngModel)]="nomG" ngModel ></div>
+                  <div class="col-xs-6 col-sm-4"></div>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                  <div class="col-xs-6 col-sm-4"><label class="text_form">Domaine*: </label> </div>
+                  <div class="col-xs-6 col-sm-4"><div class="form-group input-group form_02 R_domain" >
+                    <input type="text" class="form-control input_domain" placeholder="Subdomain" name="domaine" (keyup)="onKeyDomain($event)"  [(ngModel)]="domaine" ngModel>
+                    <span class="input-group-addon domain">.my-studeez.fr</span>
+                  </div></div>
+                  <div class="col-xs-6 col-sm-4"></div>
+
+
+                  <input type="hidden" class="form-control" name="id"  ngModel  [(ngModel)]="id">
+                  <input type="hidden" class="form-control" name="nomBase"  ngModel  [(ngModel)]="nomBase">
+                  <span class="alert-danger"  color="red">{{erreurDomain}}</span>
+
+                </div>
+
+                <br>
+
+                <div class="row">
+
+                  <div class="col-lg-12">
+                    <div class="col-xs-6 col-sm-4"><label class="tab_ajouter" >Personnalisation du groupe </label> </div>
+
+
+                  </div>
+
+                </div>
+
+                <div class="row row_01">
+
+                  <div class="col-xs-6 col-sm-4"><label class="text_form" >Image page de connexion :  </label> </div>
+
+                  <div class="col-xs-6 col-sm-4">
+
+
+                    <div class="input_01"  data-toggle="tooltip" title="<img src='../../../assets/uploads/{{upPathImagePageCx}}'width='200px' />"  attr.data-original-title="<img src='../../../assets/uploads/{{upPathImagePageCx}}'width='200px' />"  [ngClass]="disabledbutton">
+                      <input type="text"   name="upImageCnx" [(ngModel)]="upPathImagePageCx" style="margin-top: 0px!important;"  class=" image-preview-filename inputImg" disabled="disabled">
+                      <span class=" spanUpImg">
+                          <div class="btnUploadImg btn-default image-preview-input"  >
+                            <img src="../../../assets/images/picto_modifier.png" class="file_image"/>
+                              <span class="image-preview-input-title" ></span>
+
+                       <div *ngIf="estNonVide(upPathImagePageCx); then firstImgPcnx else secondImgPcnx "></div>
+                              <ng-template #firstImgPcnx ><img src="../../../assets/uploads/{{upPathImagePageCx}}" [(ngModel)]="upPathImagePageCx"  class="file_imgBleu" ></ng-template>
+                              <ng-template #secondImgPcnx><img src="../../../assets/images/imgBlanc.png"  class="file_imgBleu" disabled="file_imgBleu"></ng-template>
+
+                              <input  style=" position: absolute!important;bottom: 15px!important;width: 73%!important;opacity: 0!important;" type="file"  name="input-file-preview"  (change)="upOnFileSelected($event)"/>
+                          </div>
+                     </span>
+                    </div>
+
+                  </div>
+                  <div class="col-xs-6 col-sm-4"></div>
+                  <input type="hidden" name="imagePageConx" [(ngModel)]="upPathImagePageCx"  ngModel />
+                </div>
+
+                <br>
+
+                <div class="row row_01">
+
+                  <div class="col-xs-6 col-sm-4"><label class="text_form" >Logo Page de connexion :   </label> </div>
+
+                  <div class="col-xs-6 col-sm-4">
+                    <div class="input_01"  data-toggle="tooltip" title="<img src='../../../assets/uploads/{{upPathLogoCx}}'width='200px' />"  attr.data-original-title="<img src='../../../assets/uploads/{{upPathLogoBtache}}'width='200px' />"  [ngClass]="disabledbutton">
+                      <input type="text"   name="upImgLogoBt"  [(ngModel)]="upPathLogoCx" style="margin-top: 0px!important;"  class=" image-preview-filename inputImg" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
+                      <span class=" spanUpImg">
+                          <div class="btnUploadImg btn-default image-preview-input"  >
+                            <img src="../../../assets/images/picto_modifier.png" class="file_image"/>
+                              <span class="image-preview-input-title" ></span>
+
+                            <div *ngIf="estNonVide(upPathLogoCx); then testBT else NoteBT"></div>
+                              <ng-template #testBT><img src="../../../assets/uploads/{{upPathLogoCx}}" [(ngModel)]="upPathLogoCx"  class="file_imgBleu" ></ng-template>
+                              <ng-template #NoteBT><img src="../../../assets/images/imgBlanc.png"  class="file_imgBleu" disabled="file_imgBleu"></ng-template>
+
+                              <input  style=" position: absolute!important;bottom: 15px!important;width: 73%!important;opacity: 0!important;" type="file"  name="input-file-preview"  (change)="upOnLogoPageConxSelected($event)"/>
+                          </div>
+                     </span>
+                    </div>
+                  </div>
+                  <div class="col-xs-6 col-sm-4"></div>
+                  <input type="hidden" name="logoPageConx" [(ngModel)]="upPathLogoCx"  ngModel/>
+                </div>
+
+                <br>
+                <div class="row row_01">
+                  <div class="col-xs-6 col-sm-4"><label class="text_form" >Couleur Externe:  </label> </div>
+                  <div class="col-sm-4">
+                    <div [colorPicker]="upSelectedcolorExtern" (colorPickerChange)="upSelectedcolorExtern=$event;upOnchangeColorExtern($event)"  [ngClass]="disabledbutton" class="input-group colorpicker-component colorpicker-element input_01 " style="margin-top: 0px!important;"  type="form-control" >
+                      <input  class="input-color-picker WBarreColor"  [value]="upSelectedcolorExtern" readonly />
+                      <span class="input-group-addon colorpicker-preview WinputC" ><i  [style.background]="upSelectedcolorExtern" class="color-picker WtailleColor"></i></span>
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" name="couleurExterne" [(ngModel)]="upSelectedcolorExtern"  ngModel/>
+                <br>
+
+                <div class="row row_01">
+
+                  <div class="col-xs-6 col-sm-4"><label class="text_form" >Logo barre de tache :   </label> </div>
+                  <div class="col-xs-6 col-sm-4">
+                    <div class="input_01"  data-toggle="tooltip" title="<img src='../../../assets/uploads/{{upPathLogoBtache}}'width='200px' />"  attr.data-original-title="<img src='../../../assets/uploads/{{upPathLogoBtache}}'width='200px' />"  [ngClass]="disabledbutton">
+                      <input type="text"   name="imgLogoBt"  [(ngModel)]="upPathLogoBtache" style="margin-top: 0px!important;"  class=" image-preview-filename inputImg" disabled="disabled"> <!-- don't give a name === doesn't send on POST/GET -->
+                      <span class=" spanUpImg">
+                          <div class="btnUploadImg btn-default image-preview-input"  >
+                            <img src="../../../assets/images/picto_modifier.png" class="file_image"/>
+                              <span class="image-preview-input-title" ></span>
+
+                            <div *ngIf="estNonVide(upPathLogoBtache); then testBT else NoteBT"></div>
+                              <ng-template #testBT><img src="../../../assets/uploads/{{upPathLogoBtache}}" [(ngModel)]="upPathLogoBtache"  class="file_imgBleu" ></ng-template>
+                              <ng-template #NoteBT><img src="../../../assets/images/imgBlanc.png"  class="file_imgBleu" disabled="file_imgBleu"></ng-template>
+
+                              <input  style=" position: absolute!important;bottom: 15px!important;width: 73%!important;opacity: 0!important;" type="file"  name="input-file-preview"  (change)="upOnLogoBtacheSelected($event)"/>
+                          </div>
+                     </span>
+                    </div>
+                  </div>
+                  <div class="col-xs-6 col-sm-4"></div>
+                  <input type="hidden" name="logoBarreTache" [(ngModel)]="upPathLogoBtache"  ngModel/>
+                </div>
+
+                <br>
+                <div class="row row_01">
+                  <div class="col-xs-6 col-sm-4"><label class="text_form" >Couleur barre de tâche:  </label> </div>
+                  <div class="col-sm-4">
+                    <div [colorPicker]="upSelectedcolorBarretache" (colorPickerChange)="upSelectedcolorBarretache=$event;upOnchangeColorBarreTache($event)"  [ngClass]="disabledbutton" class="input-group colorpicker-component colorpicker-element input_01 " style="margin-top: 0px!important;"  type="form-control" >
+                      <input  class="input-color-picker WBarreColor"  [value]="upSelectedcolorBarretache" readonly />
+                      <span class="input-group-addon colorpicker-preview WinputC" ><i  [style.background]="upSelectedcolorBarretache" class="color-picker WtailleColor"></i></span>
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" name="couleurBarreTache" [(ngModel)]="upSelectedcolorBarretache"  ngModel/>
+
+
+                <br><br>
+
+                <div class="row row_01">
+                  <div class="col-xs-6 col-sm-1"><label class="check_01" style="margin-left: 53px"><input type="checkbox" name="defaultPersonalisation"  (change)="UploadDisable()" [checked]="checkboxFlagm" ngModel><span class="checkmark"></span></label></div>
+                  <div class="col-xs-6 col-sm-4"><label style="margin-top: 4.5px" class="R_label">Personnalisation par défaut de STUDEEZ</label></div>
+                </div>
+
+
+                <br><br>
+
+                <div class="row ">
+
+                  <div class="col-xs-6 col-sm-4">
+                    <label><input type="submit" name="" value="Annuler" class="btn_annuler R_btn_annuler" data-dismiss="modal" ></label>
+                  </div>
+                  <div class="col-xs-6 col-sm-4"></div>
+                  <div class="col-xs-6 col-sm-4">
+                    <label><input type="submit" [disabled]="!f.valid"  (click)="editGroupe(f.value)"    value="Enregistrer les modifications" class="btn_en_fiche" data-dismiss="modal"></label>
+                  </div>
+                </div>
+
+
+
+
+              </fieldset>
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<!---------------------------------------------------------------------------------->
+
+
+
+
+
+<!---------------------------modal delete --------------------------------------->
+
+<div id="modalDel" class="modal fade" role="dialog">
+  <div class="modal-dialog modal_Notif">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+
+
+      </div>
+      <div class="modal-body">
+        <label class="notif_01"> êtes-vous sûr(e) de vouloir supprimer «{{tmpgroupe.nomG}}»  ? </label>
+        <label class="groupeNotif_btn">
+          <input type="submit" name="" class="btn_N_01" value="Oui" (click)="deleteGroupe(tmpgroupe.id,tmpgroupe.nomBase)" data-dismiss="modal">
+          <input type="submit" name="" class="btn_N_02" value="Non" data-dismiss="modal" >
+        </label>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<!------end delete modal ------------------------------------------------------------------------------------------------>
+
+
+
+
+
